@@ -1,5 +1,6 @@
 body {
-  margin: 0;
+  margin: 0px;
+  background-color: black;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -10,4 +11,41 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+#contactList {
+  width: 50%;
+  margin-left: 150px;
+  border-right: 2px solid whitesmoke;
+  padding: 10px;
+}
+
+#header {
+  display: flex;
+  background-color: gainsboro;
+  height: 80px;
+}
+
+li {
+  margin-left: 50px;
+  list-style: none;
+}
+
+#heading {
+  margin-left: 250px;
+  color: orangered;
+}
+
+input {
+  width: 90%;
+  height: 50px;
+  margin-bottom: 10px;
+}
+
+.btn {
+  width: 50%;
+  height: 50px;
+  margin-left: 70px;
+  background-color: chocolate;
+  font-weight: bold;
 }
