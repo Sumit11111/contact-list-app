@@ -1,17 +1,20 @@
-import { useEffect, useState } from "react";
+import { Component, useEffect, useState } from "react";
 import Navbar from "./components/navBar";
 
 function App() {
+  //initialized states users t store data from api and user to set phone book data
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({
     name: "",
     phone: "",
   });
 
+  //useeffect will be called once as we passed empty array
   useEffect(() => {
     initialFetch();
   }, []);
 
+  //fetching data from provided API and seting users state
   const initialFetch = async () => {
     await fetch("https://jsonplaceholder.typicode.com/users")
       .then((response) => response.json())
@@ -21,6 +24,7 @@ function App() {
       });
   };
 
+  //handles adding contacts into users array by updated user object
   const addContactHandler = async () => {
     await fetch("https://jsonplaceholder.typicode.com/users", {
       method: "POST",
@@ -36,32 +40,48 @@ function App() {
       .then((json) => console.log(json));
 
     setUsers([...users, user]);
+    setUser({ name: "", phone: "" });
   };
 
+  //deleting contact on click of delete contact button provided in every list item
   const deleteContactHandler = async (id) => {
     await fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
       method: "DELETE",
     });
-    console.log("id:", id);
+    //console.log("id:", id);
+    //getting new array by filtering and then setting users state again
     const newArray = users.filter((u) => u.id !== id);
     setUsers(newArray);
   };
 
-  const updateDetails = (id) => {
+  //on click of list item details like name and phone number inside list this function will be called
+  const updateDetails = async (id) => {
     const selectedUser = users.filter((u) => u.id === id);
-    console.log(selectedUser[0].name);
-    // document.getElementById("name").value = selectedUser[0].name;
-    // document.getElementById("phone").value = selectedUser[0].phone;
+    //console.log(selectedUser[0].name);
+    await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        id: `${id}`,
+        name: selectedUser[0].name,
+        phone: selectedUser[0].phone,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => console.log(json));
+
     setUser({ name: selectedUser[0].name, phone: selectedUser[0].phone });
     deleteContactHandler(id);
   };
 
   return (
     <div className="App">
-      {console.log(users)}
       <Navbar />
       <div style={{ display: "flex" }}>
         <div id="contactList">
+          {/* iterating over users state and displaying data in list form over a card element */}
           {users.map((user, index) => {
             return (
               <div style={styles.cardContainer} key={index}>
@@ -77,6 +97,7 @@ function App() {
                     alt="dp"
                   ></img>
                 </div>
+                {/* this div will display the details of different users */}
                 <div
                   style={styles.contactDetails}
                   onClick={() => {
@@ -88,6 +109,7 @@ function App() {
                     {user.name}
                   </h4>
                 </div>
+                {/* this div will display the delete contact button on click of that deleteContacthandler will be called */}
                 <div style={styles.deleteButton}>
                   <button
                     style={{ backgroundColor: "red" }}
@@ -102,9 +124,11 @@ function App() {
             );
           })}
         </div>
+        {/* this div is the right hand side form component on click f addContactHandlerit will add form data int users state */}
         <div style={{ width: "40%", marginLeft: "40px" }}>
           <div style={styles.formContainer}>
             <h2>Add Contact in your Phone Book</h2>
+            {/* name field */}
             <input
               type="text"
               id="name"
@@ -116,6 +140,7 @@ function App() {
               }}
             />
             <br />
+            {/* phone field */}
             <input
               type="text"
               required={true}
@@ -139,6 +164,7 @@ function App() {
 
 export default App;
 
+// css for styling the app Component
 const styles = {
   formContainer: {
     width: "80%",
